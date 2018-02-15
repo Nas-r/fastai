@@ -135,7 +135,7 @@ def get_prediction(x):
 
 def predict(m, dl): return predict_with_targs(m, dl)[0]
 
-def predict_with_targs(m, dl):
+def predict_with_targs(m, dl, dl_proportion_per_loop):
     # switch to evaluate mode see: pytorch
     m.eval()
     if hasattr(m, 'reset'): m.reset()
@@ -149,7 +149,14 @@ def predict_with_targs(m, dl):
     # a Variable of output data.
     y_pred = model(x)
     """
-    for *x,y in iter(dl): res.append([get_prediction(m(*VV(x).cuda())),y])
+    if dl_proportion_per_loop == 1:
+        for *x,y in iter(dl): res.append([get_prediction(m(*VV(x)),y])
+    else:
+        loops = 1/dl_proportion_per_loop
+        for i in range(loops):
+           start = (i)*dl_proportion_per_loop
+           end = (i+1)*dl_proportion_per_loop
+           for *x,y in iter(dl[start:end]): res.append([get_prediction(m(*VV(x)),y]) 
     print("bad 2?")
     preda,targa = zip(*res)
     print("bad 3?")
