@@ -150,13 +150,13 @@ def predict_with_targs(m, dl, dl_proportion_per_loop):
     y_pred = model(x)
     """
     if dl_proportion_per_loop == 1:
-        for *x,y in iter(dl): res.append([get_prediction(m(*VV(x)),y]))
+        for *x,y in iter(dl): res.append([get_prediction(m(*VV(x))),y])
     else:
         loops = 1/dl_proportion_per_loop
         for i in range(loops):
            start = (i)*dl_proportion_per_loop
            end = (i+1)*dl_proportion_per_loop
-           for *x,y in iter(dl[start:end]): res.append([get_prediction(m(*VV(x)),y]))
+           for *x,y in iter(dl[start:end]): res.append([get_prediction(m(*VV(x))),y])
     print("bad 2?")
     preda,targa = zip(*res)
     print("bad 3?")
