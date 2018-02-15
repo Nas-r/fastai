@@ -261,7 +261,7 @@ class Learner():
     def predict_dl(self, dl): return predict_with_targs(self.model, dl)[0]
     def predict_array(self, arr): return to_np(self.model(V(T(arr).cuda())))
 
-    def TTA(self, n_aug=4, is_test=False):
+    def TTA(self, n_aug=4, is_test=False, dl_proportion_per_loop=1):
         """ Predict with Test Time Augmentation (TTA)
 
         Additional to the original test/validation images, apply image augmentation to them
@@ -283,6 +283,6 @@ class Learner():
         dl2 = self.data.test_aug_dl if is_test else self.data.aug_dl
         preds1,targs = predict_with_targs(self.model, dl1)
         preds1 = [preds1]*math.ceil(n_aug/4)
-        preds2 = [predict_with_targs(self.model, dl2)[0] for i in tqdm(range(n_aug), leave=False)]
+        preds2 = [predict_with_targs(self.model, dl2, dl_proportion_per_loop)[0] for i in tqdm(range(n_aug), leave=False)]
         return np.stack(preds1+preds2), targs
 

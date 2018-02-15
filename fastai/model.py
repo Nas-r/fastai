@@ -135,7 +135,7 @@ def get_prediction(x):
 
 def predict(m, dl): return predict_with_targs(m, dl)[0]
 
-def predict_with_targs(m, dl, dl_proportion_per_loop):
+def predict_with_targs(m, dl, dl_proportion_per_loop=1):
     # switch to evaluate mode see: pytorch
     m.eval()
     if hasattr(m, 'reset'): m.reset()
