@@ -150,7 +150,9 @@ def predict_with_targs(m, dl, dl_proportion_per_loop=1):
     # a Variable of output data.
     y_pred = model(x)
     """
-    for *x,y in iter(dl): res.append([get_prediction(m(*VV(x))),y]) gc.collect()
+    for *x,y in iter(dl): 
+        res.append([get_prediction(m(*VV(x))),y]) 
+        gc.collect()
     print("bad 2?")
     preda,targa = zip(*res)
     print("bad 3?")
