@@ -7,9 +7,16 @@ def opt_params(parm, lr, wd):
 
 class LayerOptimizer():
     def __init__(self, opt_fn, layer_groups, lrs, wds=None):
+        """
+        opt_fn = optimisation function
+        lrs = learning rates"""
+        #If layer grounds is not a tuple containing a list and a tuple, put it in a list
         if not isinstance(layer_groups, (list,tuple)): layer_groups=[layer_groups]
+        #If there aren't multiple learning rates, put them in a list so they're iterable
         if not isinstance(lrs, Iterable): lrs=[lrs]
+        #If there's only one learning rate, set it to the learning rate multiplied by the number of layers in the group?
         if len(lrs)==1: lrs=lrs*len(layer_groups)
+        #TODO what the fuck is wds?
         if wds is None: wds=0.
         if not isinstance(wds, Iterable): wds=[wds]
         if len(wds)==1: wds=wds*len(layer_groups)

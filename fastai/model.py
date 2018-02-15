@@ -9,6 +9,7 @@ def cut_model(m, cut):
 def predict_to_bcolz(m, gen, arr, workers=4):
     arr.trim(len(arr))
     lock=threading.Lock()
+      # switch to evaluate mode
     m.eval()
     for x,*_ in tqdm(gen):
         y = to_np(m(VV(x)).data)
@@ -135,11 +136,20 @@ def get_prediction(x):
 def predict(m, dl): return predict_with_targs(m, dl)[0]
 
 def predict_with_targs(m, dl):
+    # switch to evaluate mode see: pytorch
     m.eval()
     if hasattr(m, 'reset'): m.reset()
     res = []
     print("bad 1?")
-    for *x,y in iter(dl): res.append([get_prediction(m(*VV(x))),y])
+    #here m is a model of type nn.sequential set to evaluate mode (FUCK THIS WAS A BITCH)
+    """
+    # Forward pass: compute predicted y by passing x to the model. Module objects
+    # override the __call__ operator so you can call them like functions. When
+    # doing so you pass a Variable of input data to the Module and it produces
+    # a Variable of output data.
+    y_pred = model(x)
+    """
+    for *x,y in iter(dl): res.append([get_prediction(m(*VV(x).cuda())),y])
     print("bad 2?")
     preda,targa = zip(*res)
     print("bad 3?")
